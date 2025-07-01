@@ -11,14 +11,20 @@ import lombok.AllArgsConstructor;
 public abstract class Information {
 
     @JsonProperty("info_type")
-    private String infoType;
+    protected String infoType;
 
     @JsonProperty("info_id")
-    private String infoId;
+    protected String infoId;
 
     @JsonProperty("title")
-    private String title;
+    protected String title;
 
     @JsonProperty("content")
-    private String content;
+    protected String content = "";
+    
+    @JsonProperty("source")
+    protected String source = "";
+
+    @JsonProperty("link")
+    protected String link = "";
 }

@@ -2,17 +2,18 @@ package common.models;
 
 import lombok.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Data
 @NoArgsConstructor
 public abstract class TimeSensitiveInformation extends Information {
 
-    private String title;
-    private String infoId;
-    private String content = "";
-    private String source = "";
-    private LocalDateTime dt = LocalDateTime.now();
-    private String link = "";
+    @JsonProperty("dt")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    protected LocalDateTime dt = LocalDateTime.now();
 
     public TimeSensitiveInformation(String title, String infoId, String content,
                                     String source, LocalDateTime dt, String link) {
@@ -25,13 +26,15 @@ public abstract class TimeSensitiveInformation extends Information {
         this.link = link;
 
         if (this.infoId == null || this.infoId.isEmpty()) {
-            this.infoId = generateInfoUid(this.source, this.title, this.dt);
+            this.infoId = generateInfoUid();
         }
     }
 
-    // Implement your info_id generator here, based on source, title and datetime
-    protected static String generateInfoUid(String source, String title, LocalDateTime dt) {
-        // TODO: Implement the UID generation logic
-        return source + "-" + title + "-" + dt.toString();
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    // generate info_id based on source, title and datetime
+    protected String generateInfoUid() {
+        String dtString = this.dt != null ? this.dt.format(FORMATTER) : "";
+        return InfoUIDGenerator.generateInfoUID(this.source, this.title, dtString);
     }
 }

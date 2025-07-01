@@ -1,17 +1,11 @@
 package common.models;
 
-import lombok.*;
-import java.time.LocalDateTime;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 public abstract class NotTimeSensitiveInformation extends Information {
-
-    private String title;
-    private String infoId;
-    private String content = "";
-    private String source = "";
-    private String link = "";
 
     public NotTimeSensitiveInformation(String title, String infoId, String content,
                                        String source, String link) {
@@ -23,12 +17,12 @@ public abstract class NotTimeSensitiveInformation extends Information {
         this.link = link;
 
         if (this.infoId == null || this.infoId.isEmpty()) {
-            this.infoId = generateInfoUid(this.source, this.title, null);
+            this.infoId = generateInfoUid();
         }
     }
 
-    protected static String generateInfoUid(String source, String title, LocalDateTime dt) {
-        // TODO: Implement the UID generation logic for not time sensitive info
-        return source + "-" + title;
+    // generate info_id based on source, title and link
+    protected String generateInfoUid() {
+        return InfoUIDGenerator.generateInfoUID(this.source, this.title, this.link);
     }
 }
