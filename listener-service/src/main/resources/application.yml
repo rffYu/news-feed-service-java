@@ -4,6 +4,8 @@ spring:
     port: 5673
     username: guest
     password: guest
-  redis:
-    host: localhost
-    port: 6380
+
+  data: 
+    redis:
+      host: 127.0.0.1
+      port: 6380

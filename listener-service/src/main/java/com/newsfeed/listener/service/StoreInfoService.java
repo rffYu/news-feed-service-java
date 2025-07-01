@@ -1,19 +1,25 @@
 package com.newsfeed.listener.service;
 
-import common.models.Information;
-import com.newsfeed.listener.utils.HtmlCleaner;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.newsfeed.listener.utils.HtmlCleaner;
+
+import common.models.Information;
 
 @Service
 public class StoreInfoService {
 
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
+
+    private static final Logger logger = LoggerFactory.getLogger(StoreInfoService.class);
 
     public StoreInfoService(StringRedisTemplate redisTemplate, ObjectMapper objectMapper) {
         this.redisTemplate = redisTemplate;
@@ -23,7 +29,7 @@ public class StoreInfoService {
     @Async
     public void processInfoAsync(Information info) {
         try {
-            System.out.println("[*] Processing info id: " + info.getInfoId());
+            logger.info("[*] Processing info id: {}", info.getInfoId());
 
             // Example: default expiry is 5 days = 432000 seconds
             int expires = 432000;
@@ -43,7 +49,7 @@ public class StoreInfoService {
             sendDigTopicAction(info.getInfoId(), info.getTitle() + " " + cleanedContent);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error processing info", e);
         }
     }
 
