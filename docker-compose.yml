@@ -1,0 +1,9 @@
+services:
+  news-feed-service:
+    image: news-feed-service-java:latest
+    container_name: news-feed-service-java-listener
+    volumes:
+      - ./application.yml:/app/application.yml # Mount your local config file
+    environment:
+      - SPRING_CONFIG_LOCATION=file:/app/application.yml
+    restart: unless-stopped

@@ -3,12 +3,12 @@ spring:
     web-application-type: none
 
   rabbitmq:
-    host: localhost
+    host: 172.17.0.1
     port: 5673
     username: guest
     password: guest
 
   data: 
     redis:
-      host: 127.0.0.1
+      host: 172.17.0.1
       port: 6380
