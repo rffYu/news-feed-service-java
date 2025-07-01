@@ -1,23 +1,46 @@
 package com.newsfeed.listener.consumer;
 
-import common.models.Information;
-import com.newsfeed.listener.service.StoreInfoService;
-import com.newsfeed.listener.constants.MQConstants;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.newsfeed.listener.constants.MQConstants;
+import com.newsfeed.listener.service.StoreInfoService;
+
+import common.models.Information;
 
 @Component
 public class StoreInfoListener {
 
     private final StoreInfoService storeInfoService;
-    private final ObjectMapper objectMapper;
 
     @Autowired
     public StoreInfoListener(StoreInfoService storeInfoService, ObjectMapper objectMapper) {
         this.storeInfoService = storeInfoService;
-        this.objectMapper = objectMapper;
+    }
+
+    @Bean
+    public DirectExchange storeInfoExchange() {
+        return new DirectExchange(MQConstants.EXCHANGE);
+    }
+
+    @Bean
+    public Queue storeInfoQueue() {
+        return new Queue(MQConstants.STORE_INFO_QUEUE, false);
+    }
+
+    @Bean
+    public Binding binding(Queue storeInfoQueue, DirectExchange storeInfoExchange) {
+        return BindingBuilder
+                .bind(storeInfoQueue)
+                .to(storeInfoExchange)
+                .with(MQConstants.STORE_INFO_ROUTING_KEY);
     }
 
     /**
