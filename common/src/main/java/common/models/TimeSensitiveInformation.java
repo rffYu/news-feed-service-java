@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @NoArgsConstructor
 public abstract class TimeSensitiveInformation extends Information {
 
+    @Getter
     @JsonProperty("dt")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     protected LocalDateTime dt = LocalDateTime.now();
