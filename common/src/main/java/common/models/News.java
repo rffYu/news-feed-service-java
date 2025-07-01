@@ -19,4 +19,3 @@ public class News extends TimeSensitiveInformation {
         super.setInfoType("news");
     }
 }
-

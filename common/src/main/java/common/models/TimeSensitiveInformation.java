@@ -35,4 +35,3 @@ public abstract class TimeSensitiveInformation extends Information {
         return source + "-" + title + "-" + dt.toString();
     }
 }
-

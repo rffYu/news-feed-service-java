@@ -3,11 +3,9 @@ package com.newsfeed.listener.consumer;
 import common.models.Information;
 import com.newsfeed.listener.service.StoreInfoService;
 import com.newsfeed.listener.constants.MQConstants;
-import com.newsfeed.listener.consumer.SerializationHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -41,4 +39,3 @@ public class StoreInfoListener {
         }
     }
 }
-

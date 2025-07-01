@@ -21,4 +21,3 @@ public class RawStory extends NotTimeSensitiveInformation {
         super.setInfoType("story");
     }
 }
-

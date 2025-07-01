@@ -22,4 +22,3 @@ public class RawNews extends TimeSensitiveInformation {
         super.setInfoType("news");
     }
 }
-

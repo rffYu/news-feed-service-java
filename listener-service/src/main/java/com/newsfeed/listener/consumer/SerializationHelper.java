@@ -22,4 +22,3 @@ public class SerializationHelper {
         return objectMapper.readValue(jsonPayload, clazz);
     }
 }
-

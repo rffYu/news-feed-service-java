@@ -32,4 +32,3 @@ public abstract class NotTimeSensitiveInformation extends Information {
         return source + "-" + title;
     }
 }
-

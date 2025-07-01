@@ -16,4 +16,3 @@ public class Serialization {
         return infoTypeMap.get(infoType);
     }
 }
-

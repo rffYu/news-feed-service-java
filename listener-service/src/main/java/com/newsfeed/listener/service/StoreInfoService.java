@@ -55,4 +55,3 @@ public class StoreInfoService {
         System.out.println("[>] Dig Topic Action: " + infoId + " - " + content);
     }
 }
-
