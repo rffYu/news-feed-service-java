@@ -43,6 +43,9 @@ public class StoreInfoListener {
                 .with(MQConstants.STORE_INFO_ROUTING_KEY);
     }
 
+    @Autowired
+    private SerializationHelper serializationHelper;
+
     /**
      * This method is equivalent to the Python `queue.consume(on_message)`
      * It listens to the queue named `store_info_queue`.
@@ -51,7 +54,7 @@ public class StoreInfoListener {
     public void onMessage(String message) {
         try {
             // Deserialize JSON to Info object
-            Information info = SerializationHelper.decodeDataObject(message);
+            Information info = serializationHelper.decodeDataObject(message);
 
             // Asynchronously process the info
             storeInfoService.processInfoAsync(info);
