@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newsfeed.listener.utils.HtmlCleaner;
+import com.newsfeed.listener.constants.RedisConstants;
 
 import common.models.Information;
 
@@ -31,14 +32,11 @@ public class StoreInfoService {
         try {
             logger.info("[*] Processing info id: {}", info.getInfoId());
 
-            // Example: default expiry is 5 days = 432000 seconds
-            int expires = 432000;
-
             // Store in Redis
             redisTemplate.opsForValue().set(
                     "info:" + info.getInfoId(),
                     objectMapper.writeValueAsString(info),
-                    expires, TimeUnit.SECONDS
+                    RedisConstants.INFO_EXPIRE_IN_SEC, TimeUnit.SECONDS
             );
 
             // Send new info message (simulate)
