@@ -33,10 +33,10 @@ class KeyGenerator {
 
 @Repository("redisInformationRepository")
 public class RedisInformationRepository implements InformationRepository {
-    private final ReactiveRedisTemplate<String, Object> redisTemplate;
+    private final ReactiveRedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
 
-    public RedisInformationRepository(ReactiveRedisTemplate redisTemplate, ObjectMapper objectMapper) {
+    public RedisInformationRepository(ReactiveRedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
     }
