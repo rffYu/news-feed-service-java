@@ -1,4 +1,4 @@
-package common.models;
+package common.dto;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;

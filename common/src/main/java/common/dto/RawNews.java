@@ -1,4 +1,4 @@
-package common.models;
+package common.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,17 +8,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class RawNews extends TimeSensitiveInformation {
+public class RawNews extends TimeSensitiveInformationDto {
 
     private List<String> cat;
 
     public RawNews(String title, String infoId, String content,
                    String source, LocalDateTime dt, String link, List<String> cat) {
-        super(title, infoId, content, source, dt, link);
-        this.cat = cat;
-        super.setInfoType("news");
+        super("news", title, infoId, content, source, dt, link, cat);
     }
 }
