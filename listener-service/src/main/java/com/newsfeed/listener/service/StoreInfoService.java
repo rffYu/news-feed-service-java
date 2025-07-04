@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.newsfeed.listener.utils.HtmlCleaner;
 
 import common.dto.InformationDto;
+import reactor.core.publisher.Mono;
 
 @Service
 public class StoreInfoService {
@@ -32,14 +33,14 @@ public class StoreInfoService {
 
             InformationDao dao = this.infoMapper.toDao(info);
 
-            informationRepository.save(dao);
-
-            // Send new info message (simulate)
-            sendNewInfoMsg(info);
-
-            // Send dig topic action (simulate)
-            String cleanedContent = HtmlCleaner.cleanHtml(info.getContent());
-            sendDigTopicAction(info.getInfoId(), info.getTitle() + " " + cleanedContent);
+            informationRepository.save(dao)
+                .doOnSuccess(v -> logger.info("Saved info id: {}", dao.getInfoId()))
+                .doOnError(e -> logger.error("Error saving info id: {}", dao.getInfoId(), e))
+                .then(Mono.fromRunnable(() -> {
+                    sendNewInfoMsg(info);
+                    String cleanedContent = HtmlCleaner.cleanHtml(info.getContent());
+                    sendDigTopicAction(info.getInfoId(), info.getTitle() + " " + cleanedContent);
+                }));
 
         } catch (Exception e) {
             logger.error("Error processing info", e);
