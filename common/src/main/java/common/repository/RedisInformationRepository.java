@@ -31,7 +31,7 @@ class KeyGenerator {
     }
 }
 
-@Repository
+@Repository("redisInformationRepository")
 public class RedisInformationRepository implements InformationRepository {
     private final ReactiveRedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
