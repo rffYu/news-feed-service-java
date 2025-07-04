@@ -5,7 +5,6 @@ import common.repository.InformationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.newsfeed.listener.utils.HtmlCleaner;
@@ -26,25 +25,23 @@ public class StoreInfoService {
         this.infoMapper = infoMapper;
     }
 
-    @Async
-    public void storeInfoAsync(InformationDto info) {
-        try {
-            logger.info("[*] Processing info id: {}", info.getInfoId());
+    public Mono<Void> storeInfoAsync(InformationDto info) {
+        logger.info("[*] Processing info id: {}", info.getInfoId());
 
-            InformationDao dao = this.infoMapper.toDao(info);
+        InformationDao dao = this.infoMapper.toDao(info);
 
-            informationRepository.save(dao)
-                .doOnSuccess(v -> logger.info("Saved info id: {}", dao.getInfoId()))
-                .doOnError(e -> logger.error("Error saving info id: {}", dao.getInfoId(), e))
-                .then(Mono.fromRunnable(() -> {
-                    sendNewInfoMsg(info);
-                    String cleanedContent = HtmlCleaner.cleanHtml(info.getContent());
-                    sendDigTopicAction(info.getInfoId(), info.getTitle() + " " + cleanedContent);
-                }));
-
-        } catch (Exception e) {
-            logger.error("Error processing info", e);
-        }
+        return informationRepository.save(dao)
+            .doOnSuccess(v -> logger.info("Saved info id: {}", dao.getInfoId()))
+            .doOnError(e -> logger.error("Error saving info id: {}", dao.getInfoId(), e))
+            .then(Mono.fromRunnable(() -> {
+                sendNewInfoMsg(info);
+                String cleanedContent = HtmlCleaner.cleanHtml(info.getContent());
+                sendDigTopicAction(info.getInfoId(), info.getTitle() + " " + cleanedContent);
+            }))
+            .onErrorResume(e -> {
+                logger.error("Error processing info", e);
+                return Mono.empty();
+            }).then();
     }
 
     private void sendNewInfoMsg(InformationDto info) {
