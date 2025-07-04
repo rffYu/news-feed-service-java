@@ -38,6 +38,7 @@ class FlexibleLocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> 
 }
 
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public abstract class TimeSensitiveInformationDto extends InformationDto {
 
