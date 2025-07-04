@@ -1,23 +1,48 @@
 package common.dto;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import common.InfoUIDGenerator;
 import lombok.*;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+class FlexibleLocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
+
+    private static final DateTimeFormatter[] SUPPORTED_FORMATS = new DateTimeFormatter[] {
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"),
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
+        DateTimeFormatter.ISO_LOCAL_DATE_TIME
+    };
+
+    @Override
+    public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        String text = p.getText();
+        for (DateTimeFormatter formatter : SUPPORTED_FORMATS) {
+            try {
+                return LocalDateTime.parse(text, formatter);
+            } catch (Exception e) {
+                // Try next formatter
+            }
+        }
+        throw ctxt.weirdStringException(text, LocalDateTime.class, "Unsupported date format");
+
+    }
+}
+
 @Data
-@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public abstract class TimeSensitiveInformationDto extends InformationDto {
-    private static final String DT_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
-    @Getter
     @JsonProperty("dt")
-    @JsonFormat(pattern = DT_PATTERN)
+    @JsonDeserialize(using = FlexibleLocalDateTimeDeserializer.class)
     protected LocalDateTime dt = LocalDateTime.now();
 
     public TimeSensitiveInformationDto(String infoType, String title, String infoId, String content,
@@ -33,7 +58,7 @@ public abstract class TimeSensitiveInformationDto extends InformationDto {
         this.setCat(cat != null ? cat : List.of());
     }
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(DT_PATTERN);
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     // generate info_id based on source, title and datetime
     protected String generateInfoUid() {
