@@ -33,6 +33,11 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
+        </dependency>
+
         <!-- JSR310 Java 8 time support in Jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
