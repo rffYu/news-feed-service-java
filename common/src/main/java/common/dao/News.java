@@ -14,6 +14,6 @@ public class News extends TimeSensitiveInformationDao {
 
     public News(String title, String infoId, String content,
                 String source, LocalDateTime dt, String link, List<String> cat) {
-        super("new", title, infoId, content, source, dt, link, cat);
+        super("news", title, infoId, content, source, dt, link, cat);
     }
 }
