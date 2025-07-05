@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -27,24 +26,6 @@ public class StoreInfoListener {
     public StoreInfoListener(StoreInfoService storeInfoService, ObjectMapper objectMapper) {
         this.storeInfoService = storeInfoService;
         this.objectMapper = objectMapper;
-    }
-
-    @Bean
-    public DirectExchange storeInfoExchange() {
-        return new DirectExchange(MQConstants.EXCHANGE);
-    }
-
-    @Bean
-    public Queue storeInfoQueue() {
-        return new Queue(MQConstants.STORE_INFO_QUEUE, false);
-    }
-
-    @Bean
-    public Binding binding(Queue storeInfoQueue, DirectExchange storeInfoExchange) {
-        return BindingBuilder
-                .bind(storeInfoQueue)
-                .to(storeInfoExchange)
-                .with(MQConstants.STORE_INFO_ROUTING_KEY);
     }
 
     @RabbitListener(queues = MQConstants.STORE_INFO_QUEUE, ackMode = "MANUAL")
